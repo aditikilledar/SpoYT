@@ -75,52 +75,21 @@ pip install google-auth-oauthlib google-api-python-client spotipy python-dotenv
 
 ### Usage
 
-1. **Spotify Playlist to YouTube**:
-   - Authenticate with both Spotify and YouTube using the OAuth flow.
-   - Call the `add_vid_to_playlist` function to transfer tracks.
+1. **Find your Spotify Playlist Id**:
+   - Add it to the ```spotify_playlist_id``` variable in main.py.
 
-2. **Function Details**:
-   - `add_vid_to_playlist(yt, playlist_id, video_id)`: Adds a video to a specified YouTube playlist.
+2. **Decide New Playlist Name**:
+   - - Add it to the ```youtube_playlist_title``` variable in main.py.
 
 ### Example
 
 Here is an example of how to use the provided script to add a video to a YouTube playlist:
 
 ```python
-from googleapiclient.discovery import build
-from spotipy.oauth2 import SpotifyOAuth
-from dotenv import load_dotenv
-import os
-
-# Load environment variables
-load_dotenv()
-
-# Authenticate with Spotify
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
-    client_id=os.getenv("SPOTIPY_CLIENT_ID"),
-    client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
-    redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI"),
-    scope="playlist-read-private"
-))
-
-# Authenticate with YouTube
-youtube = build('youtube', 'v3', developerKey=os.getenv("YOUTUBE_API_KEY"))
-
-# Function to add a video to a YouTube playlist
-def add_vid_to_playlist(yt, playlist_id, video_id):
-    req = yt.playlistItems().insert(
-        part="snippet",
-        body={
-            "snippet": {
-                "playlistId": playlist_id,
-                "resourceId": {
-                    "kind": "youtube#video",
-                    "videoId": video_id
-                }
-            }
-        }
-    )
-    req.execute()
+if __name__ == "__main__":
+    spotify_playlist_id = '37i9dQZF1DX9tPFwDMOaN1'
+    youtube_playlist_title = 'KPOP ON'
+    transfer_playlist(spotify_playlist_id, youtube_playlist_title)
 ```
 
 ### Troubleshooting

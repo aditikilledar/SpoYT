@@ -1,10 +1,6 @@
 # SpoYT
 Want to export playlists from Spotify to Youtube? I gotchu. :)
 
-Here's a sample `README.md` for your project, incorporating the use of a `.env` file for configuration:
-
----
-
 # SpoYT: Spotify to YouTube Playlist Transfer
 
 SpoYT is a Python application that transfers playlists from Spotify to YouTube. This tool allows you to migrate your favorite playlists across platforms with ease.

@@ -9,6 +9,7 @@ from google.auth.transport.requests import Request
 import os
 from googleapiclient.errors import HttpError
 import time
+import re
 
 from dotenv import load_dotenv
 
@@ -124,7 +125,10 @@ def add_vid_to_playlist(yt, playlist_id, video_id):
                 raise  # Re-raise unexpected errors
     raise Exception("Max retries exceeded")
 
-def transfer_playlist(spotify_playlist_id, yt_playlist_title):
+def transfer_playlist(url, yt_playlist_title):
+    
+    spotify_playlist_id = parse_spotify_playlist_url(url)
+    
     # auth spotify
     sp = auth_spotify()
 
@@ -150,8 +154,17 @@ def transfer_playlist(spotify_playlist_id, yt_playlist_title):
         else:
             print(f"Could not find {track_name} by {artist_name} on YouTube")
 
+def parse_spotify_playlist_url(url):
+    pattern = r"playlist/([^?]+)"
+    match = re.search(pattern, url)
+    if match:
+        playlist_id = match.group(1)
+        return playlist_id
+    else:
+        raise Exception("Oops! Enter a valid Spotify playlist URL.")
+
 if __name__ == "__main__":
-    spotify_playlist_id = '37i9dQZF1DX9tPFwDMOaN1'
+    spotify_playlist_id = 'https://open.spotify.com/playlist/37i9dQZF1DX9tPFwDMOaN1?si=03ab893f64954f7c'
     youtube_playlist_title = 'KPOP ON'
     transfer_playlist(spotify_playlist_id, youtube_playlist_title)
 

@@ -46,17 +46,17 @@ def auth_youtube():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                "credentials.json", YOUTUBE_SCOPES
+                "client_secret_file.json", YOUTUBE_SCOPES
             )
             # check which port to run on
             creds = flow.run_local_server(port=0)
         
         # save creds for future use
-        with open("credentials.json", "w") as token:
+        with open("token.json", "w") as token:
             token.write(creds.to_json())
 
-    youtube = build("youtube", "v3", credentials=creds)
-    return youtube
+    yt = build("youtube", "v3", credentials=creds)
+    return yt
 
 def get_spotify_playlist_tracks(sp, playlist_id):
     tracks = []
@@ -68,6 +68,9 @@ def get_spotify_playlist_tracks(sp, playlist_id):
     return tracks
 
 def create_yt_playlist(yt, title, descr):
+
+    # need to first make sure if a yt channel exists for the user - currently assumes it does
+
     req = yt.playlists().insert(
         part="snippet, status",
         body={
@@ -145,7 +148,7 @@ def transfer_playlist(url, yt_playlist_title):
     for track in tracks:
         track_name = track['track']['name']
         artist_name = track['track']['artists'][0]['name']
-        query = f"{track_name} {artist_name}"
+        query = f"{track_name} by {artist_name} Official Audio"
         # look for the video and get id of first video
         video_id = search_yt_video(yt, query)
         if video_id:
@@ -164,8 +167,11 @@ def parse_spotify_playlist_url(url):
         raise Exception("Oops! Enter a valid Spotify playlist URL.")
 
 if __name__ == "__main__":
-    spotify_playlist_id = 'https://open.spotify.com/playlist/37i9dQZF1DX9tPFwDMOaN1?si=03ab893f64954f7c'
-    youtube_playlist_title = 'KPOP ON'
+    spotify_playlist_id = 'https://open.spotify.com/playlist/5GPpG7mADcnfRwN2naGKnF?si=6929138ddb104761&pt=43243fc48e5d57347a66912aba2e8a1b'
+    
+    youtube_playlist_title = 'a new playlist'
+
+    
     transfer_playlist(spotify_playlist_id, youtube_playlist_title)
 
     # https://open.spotify.com/playlist/37i9dQZF1DX9tPFwDMOaN1?si=03ab893f64954f7c
